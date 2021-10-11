@@ -1,0 +1,28 @@
+pipeline {
+    agent {
+        docker { 
+            image 'ubuntu:18.04' 
+            args '-u root:sudo -v $HOME/workspace'
+        }
+    }
+    stages {
+         stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gopaddle-github', url: 'https://github.com/Gayathri-Bluemeric/gpctl-testsuite.git']]])
+                sh "ls -lart ./*"
+            }
+        }    
+        stage('Test') {
+            steps {
+                sh '''
+                   id
+                   cat /etc/os-release
+                   apt-get -y update
+                   apt-get -y install expect
+                   whereis expect
+                   ls
+                '''
+            }
+        }
+    }
+}
