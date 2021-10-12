@@ -1,0 +1,28 @@
+{
+  "help": [
+    {
+      "status": "PASS",
+      "Scenario": "GPCTL Help"
+    },
+    {
+      "status": "PASS",
+      "Scenario": "GPCTL Import Help"
+    },
+    {
+      "status": "FAIL",
+      "Scenario": "GPCTL LogIn Help"
+    },
+    {
+      "status": "FAIL",
+      "Scenario": "GPCTL Init Help"
+    }
+  ],
+  "apps": {
+    "mernSocial": [
+      {
+        "status": "PASS",
+        "Scenario": "Mern-Social: GPCTL Initial setup"
+      }
+    ]
+  }
+}
