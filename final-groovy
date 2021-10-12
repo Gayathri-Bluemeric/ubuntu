@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        docker { 
+            image 'ubuntu:18.04' 
+            args '-u root:sudo -v $HOME/workspace'
+        }
+    }
+    stages {
+         stage('CloneTestCases') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'gopaddle-github', url: 'https://github.com/Gayathri-Bluemeric/gpctl-testsuite.git']]])
+                sh "ls"
+                sh "ls -lart ./*"
+            }
+        }    
+        stage('SetUp') {
+            steps {
+                sh '''
+                   apt-get -y update
+                   apt-get -y install expect
+                   apt-get -y install wget
+                   apt-get -y install jq
+                   [ -f ./gpctl ] && rm gpctl || echo "gpctl file did not exist. Downloading again."
+                   wget https://gpctl.s3-ap-southeast-1.amazonaws.com/gpctl
+                   chmod +x ./gpctl
+                   export PATH=$PATH:$(pwd)
+                   gpctl --version   
+                   chmod +x setUp.sh
+                   chmod +x cleanUp.sh
+                   bash -x cleanUp.sh
+                   bash -x setUp.sh
+                   cd help
+                   bash -x runAll.sh
+                '''
+            }
+        }
+    }
+}
